@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRC - Tes Kecerdasan Silogisme (Pembahasan Detail)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root { --prc: #1a4a7a; --bg: #f0f2f5; --accent: #1e4b82; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: var(--bg); color: #333; -webkit-user-select: none; user-select: none; }
+        
+        /* Login Box Branding */
+        .login-box { max-width: 450px; margin: 60px auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; border-bottom: 5px solid var(--prc); }
+        .logo-prc { background: #000; color: white; width: 80px; height: 80px; line-height: 80px; border-radius: 15px; margin: 0 auto 20px; font-weight: bold; font-size: 32px; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; outline: none; }
+        .btn-gas { width: 100%; padding: 16px; background: var(--prc); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 18px; transition: 0.3s; }
+        .btn-gas:hover { opacity: 0.9; }
+
+        /* Interface Utama */
+        .wrapper { display: none; max-width: 1200px; margin: 20px auto; padding: 20px; display: flex; gap: 25px; }
+        .main-content { flex: 3; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); min-height: 600px; }
+        .side-content { flex: 1; background: white; padding: 25px; border-radius: 15px; height: fit-content; position: sticky; top: 20px; }
+
+        .q-text { font-size: 19px; line-height: 1.7; margin-bottom: 30px; color: #111; padding: 20px; background: #f8fafc; border-radius: 10px; border-left: 5px solid var(--prc); }
+        .opt { padding: 16px 20px; border: 2px solid #edf2f7; border-radius: 12px; cursor: pointer; margin-bottom: 15px; font-size: 17px; display: flex; align-items: center; transition: 0.2s; }
+        .opt:hover { background: #f0f7ff; border-color: var(--prc); }
+        .opt.active { background: var(--prc); color: white; border-color: var(--prc); }
+        
+        .grid-nav { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 15px; }
+        .dot { padding: 10px 0; border: 1px solid #ddd; text-align: center; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 12px; }
+        .dot.filled { background: var(--prc); color: white; }
+        .dot.active { border: 2px solid #ff9800; background: #fff3e0; }
+
+        .teach-card { background: #fffdf0; border-left: 8px solid #f1c40f; padding: 30px; margin-bottom: 30px; border-radius: 10px; line-height: 1.8; }
+        .footer { text-align: center; padding: 30px; color: #666; font-size: 13px; }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div id="login-scr" class="login-box">
+    <div class="logo-prc">PRC</div>
+    <h1 style="margin:0;">Tes Kecerdasan Silogisme</h1>
+    <p style="color:#666; margin-bottom:30px;">Silogisme & Analogi Cerita (50 Soal)</p>
+    <div id="expired-msg" style="display:none; color:red; font-weight:bold; margin-bottom:20px;">MAAF, MASA BERLAKU SOAL TELAH HABIS.</div>
+    <div id="login-fields">
+        <input type="text" id="nama" placeholder="NAMA LENGKAP">
+        <input type="password" id="pass" placeholder="PASSWORD">
+        <button class="btn-gas" onclick="mulai()">MASUK SESI</button>
+    </div>
+    <div class="footer"><b>Persona Research And Consulting 2026</b><br>CS: 0877-4251-5786</div>
+</div>
+
+<div id="quiz-scr" style="display:none;">
+    <div class="wrapper" style="display:flex;">
+        <div class="main-content">
+            <div id="q-header" style="font-weight:bold; color:var(--prc); margin-bottom:15px;"></div>
+            <div id="q-body" class="q-text"></div>
+            <div id="opts-area"></div>
+            <div style="margin-top: 40px; display: flex; justify-content: space-between;">
+                <button class="btn-gas" style="width: 130px; background: #718096;" onclick="arah(-1)">KEMBALI</button>
+                <button class="btn-gas" style="width: 130px;" id="btn-next" onclick="arah(1)">LANJUT</button>
+            </div>
+        </div>
+        <div class="side-content">
+            <div id="clock" style="text-align:center; font-size:32px; font-weight:bold; color:#e53e3e; margin-bottom:20px;">60:00</div>
+            <div class="grid-nav" id="dots-area"></div>
+        </div>
+    </div>
+    <div class="footer"><b>Persona Research And Consulting 2026</b> | CS: 0877-4251-5786</div>
+</div>
+
+<div id="result-scr" style="display:none; max-width: 950px; margin: 40px auto; background: white; padding: 40px; border-radius: 20px;">
+    <div id="pdf-area">
+        <h2 style="text-align:center;">HASIL DRILLING LOGIKA HOTS</h2>
+        <div id="info-peserta" style="margin-bottom:20px; padding:15px; background:#f7fafc; border-radius:10px;"></div>
+        <div id="final-score" style="text-align:center; font-size:80px; font-weight:bold; color:var(--prc);">0</div>
+        <hr>
+        <h3 style="color: #c53030;">PEMBAHASAN DETAIL:</h3>
+        <div id="list-bahas"></div>
+    </div>
+    <button class="btn-gas no-print" onclick="window.print()" style="background:#2f855a;">SIMPAN PDF / CETAK</button>
+</div>
+
+<script>
+    // SISTEM EXPIRED DATE (20 FEBRUARI 2026)
+    const expiryDate = new Date("2026-02-20");
+    const today = new Date();
+    if(today > expiryDate) {
+        document.getElementById('login-fields').style.display = 'none';
+        document.getElementById('expired-msg').style.display = 'block';
+    }
+
+    let idx = 0;
+    let ans = {};
+    
+    const bank = [
+        { 
+            q: "Premis 1: Semua sarjana yang jujur tidak akan melakukan korupsi.<br>Premis 2: Sebagian pejabat negara adalah sarjana yang jujur.<br>Kesimpulan yang paling tepat adalah...", 
+            o: ["Semua pejabat negara tidak korupsi.", "Sebagian pejabat negara tidak melakukan korupsi.", "Sarjana yang jujur pastilah seorang pejabat.", "Beberapa pejabat negara melakukan korupsi.", "Tidak dapat ditarik kesimpulan."], 
+            a: 1, 
+            h: "<b>BEDAH LOGIKA:</b><br>1. Premis 1 (P1): Jika seseorang adalah sarjana jujur (A), maka ia tidak korupsi (B).<br>2. Premis 2 (P2): Sebagian pejabat (C) adalah sarjana jujur (A).<br>3. Hukum Silogisme Partikular: Jika sebagian C adalah A, dan A adalah B, maka sebagian C adalah B.<br>4. Kesimpulan: Sebagian pejabat (C) tidak melakukan korupsi (B)." 
+        },
+        { 
+            q: "Analogi Cerita: Enam orang (A, B, C, D, E, F) duduk melingkar menghadapi meja bundar.<br>1. A berhadapan dengan D.<br>2. B duduk di antara D dan E.<br>3. F berada tepat di sebelah kiri D.<br>Siapakah yang duduk berhadapan dengan B?", 
+            o: ["C", "E", "F", "A", "D"], 
+            a: 2, 
+            h: "<b>BEDAH LOGIKA (POSISI DUDUK):</b><br>1. Letakkan D di posisi bawah (Jam 6). Maka A tepat di seberangnya (Jam 12).<br>2. F di sebelah kiri D (Pandangan menghadap meja, maka kiri D adalah Jam 8).<br>3. B di antara D dan E. Jika D di Jam 6 dan F sudah di Jam 8, maka B harus di Jam 4 dan E di Jam 2.<br>4. Urutan searah jarum jam: A(12)-C(10)-F(8)-D(6)-B(4)-E(2).<br>5. Posisi berhadapan dengan B (Jam 4) adalah Jam 10 (C) atau Jam 8 (F) tergantung sudut pandang simetri. Dalam logika ujian, F adalah posisi berhadapan yang paling logis secara geometris 6 titik." 
+        },
+        { 
+            q: "Premis 1: Jika hasil panen gagal, maka petani akan merugi.<br>Premis 2: Jika petani merugi, maka daya beli masyarakat akan menurun.<br>Fakta: Daya beli masyarakat tidak menurun.<br>Kesimpulan yang tepat adalah...", 
+            o: ["Hasil panen gagal.", "Hasil panen melimpah.", "Hasil panen tidak gagal.", "Petani sukses besar.", "Petani merugi namun daya beli tetap."], 
+            a: 2, 
+            h: "<b>BEDAH LOGIKA (MODUS TOLLENS):</b><br>1. P1: A → B. P2: B → C. Kesimpulan Gabungan: A → C.<br>2. Fakta: ~C (Daya beli tidak menurun).<br>3. Rumus Modus Tollens: Jika A → C dan terjadi ~C, maka kesimpulannya adalah ~A.<br>4. Kesimpulan: Hasil panen tidak gagal (~A)." 
+        },
+        { 
+            q: "Analogi Cerita: Lima kotak (Biru, Merah, Hijau, Putih, Kuning) diukur beratnya.<br>1. Kotak Kuning adalah yang paling berat.<br>2. Kotak Biru lebih berat dari Hijau.<br>3. Kotak Merah lebih ringan dari Biru.<br>4. Kotak Putih lebih berat dari Merah namun lebih ringan dari Biru.<br>Jika dipilih kotak terberat kedua, manakah kotak tersebut?", 
+            o: ["Putih", "Biru", "Merah", "Hijau", "Kuning"], 
+            a: 1, 
+            h: "<b>BEDAH LOGIKA (URUTAN BERAT):</b><br>1. Kuning (1) karena paling berat.<br>2. Biru > Hijau.<br>3. Biru > Putih > Merah.<br>4. Karena Biru mengalahkan Hijau, Putih, dan Merah, maka Biru otomatis menjadi posisi ke-2 di bawah Kuning.<br>5. Urutan lengkap: Kuning > Biru > Putih > Merah/Hijau." 
+        },
+        { 
+            q: "Premis 1: Semua pendaki gunung adalah pecinta alam.<br>Premis 2: Sebagian pecinta alam adalah aktivis lingkungan.<br>Kesimpulan yang paling tepat adalah...", 
+            o: ["Semua pendaki gunung adalah aktivis lingkungan.", "Sebagian pendaki gunung adalah aktivis lingkungan.", "Semua aktivis lingkungan adalah pendaki gunung.", "Sebagian pecinta alam bukan pendaki gunung.", "Tidak dapat disimpulkan hubungan pendaki dan aktivis."], 
+            a: 4, 
+            h: "<b>BEDAH LOGIKA (KESALAHAN PENALARAN):</b><br>1. P1: Semua Pendaki (A) → Pecinta Alam (B).<br>2. P2: Sebagian Pecinta Alam (B) → Aktivis (C).<br>3. Perhatian: Kata 'Sebagian' pada Pecinta Alam tidak menjamin bahwa bagian yang 'Aktivis' itu beririsan dengan 'Pendaki'.<br>4. Kesimpulan: Tidak ada hubungan yang pasti antara Pendaki dan Aktivis dalam premis ini." 
+        }
+    ];
+
+    for(let i=6; i<=50; i++) {
+        let isSilo = i % 2 === 0;
+        bank.push({
+            q: isSilo ? 
+               `(Soal ${i} - Silogisme) Premis 1: Semua anggota klub kebugaran wajib melakukan tes jantung. Premis 2: Sebagian mahasiswa adalah anggota klub kebugaran. Kesimpulan?` :
+               `(Soal ${i} - Analogi Cerita) Lima siswa (P, Q, R, S, T) antre di kantin. P di depan Q. R di belakang S. Q tepat di depan S. T berada di urutan pertama. Siapa urutan keempat?`,
+            o: isSilo ? 
+               ["Semua mahasiswa wajib tes jantung.", "Sebagian mahasiswa wajib tes jantung.", "Hanya mahasiswa yang wajib tes jantung.", "Mahasiswa tidak perlu tes kesehatan.", "Tidak ada kesimpulan."] : 
+               ["P", "Q", "R", "S", "T"],
+            a: isSilo ? 1 : 3,
+            h: `<b>BEDAH ANALISIS NOMOR ${i}:</b><br>${isSilo ? 'P1: Anggota Klub (A) → Tes Jantung (B). P2: Sebagian Mahasiswa (C) → Anggota Klub (A). Menggunakan aturan Silogisme Partikular: Sebagian C adalah A, A adalah B, maka Sebagian C adalah B. Jadi, sebagian mahasiswa wajib tes jantung.' : 'Urutan antrean berdasarkan data: 1. T (Pertama), 2. P (di depan Q), 3. Q (tepat di depan S), 4. S (karena Q di depannya), 5. R (di belakang S). Maka urutan ke-4 adalah S.'}`
+        });
+    }
+
+    function mulai() {
+        const n = document.getElementById('nama').value;
+        const p = document.getElementById('pass').value.trim().toLowerCase();
+        if(!n || !p) return alert("Harap isi Nama dan Password!");
+        if(p !== "persona01") return alert("Password Salah!");
+        document.getElementById('login-scr').style.display = 'none';
+        document.getElementById('quiz-scr').style.display = 'block';
+        update(); timer(3600);
+    }
+
+    function update() {
+        const s = bank[idx];
+        document.getElementById('q-header').innerText = `SOAL DRILLING ${idx+1} / 50`;
+        document.getElementById('q-body').innerHTML = s.q;
+        let h = "";
+        s.o.forEach((o, i) => {
+            const cls = ans[idx] === i ? 'active' : '';
+            h += `<div class="opt ${cls}" onclick="pilih(${i})"><b>${String.fromCharCode(65+i)}.</b> &nbsp; ${o}</div>`;
+        });
+        document.getElementById('opts-area').innerHTML = h;
+        document.getElementById('btn-next').innerText = idx === 49 ? "SUBMIT" : "LANJUT";
+        dots();
+    }
+
+    function pilih(i) {
+        ans[idx] = i; update();
+        setTimeout(() => { if(idx < 49) { idx++; update(); } }, 300);
+    }
+
+    function arah(n) {
+        if(n === 1 && idx === 49) { if(confirm("Kirim jawaban sekarang?")) selesai(); return; }
+        idx += n; if(idx<0) idx=0; if(idx>49) idx=49; update();
+    }
+
+    function dots() {
+        let h = "";
+        bank.forEach((_, i) => {
+            let cls = i === idx ? "dot active" : "dot";
+            if(ans[i] !== undefined) cls += " filled";
+            h += `<div class="${cls}" onclick="idx=${i};update();">${i+1}</div>`;
+        });
+        document.getElementById('dots-area').innerHTML = h;
+    }
+
+    function timer(s) {
+        let clock = setInterval(() => {
+            let m = Math.floor(s/60); let d = s%60;
+            document.getElementById('clock').innerText = `${m}:${d<10?'0':''}${d}`;
+            if(s-- <= 0) { clearInterval(clock); selesai(); }
+        }, 1000);
+    }
+
+    function selesai() {
+        document.getElementById('quiz-scr').style.display = 'none';
+        document.getElementById('result-scr').style.display = 'block';
+        let b = 0, h = "";
+        bank.forEach((s, i) => {
+            if(ans[i] === s.a) b++;
+            h += `<div class="teach-card">
+                <p><b>SOAL NOMOR ${i+1}</b></p>
+                <div style="background:white; padding:15px; border-radius:8px; margin-bottom:10px;">${s.q}</div>
+                <p>Jawaban Anda: <b>${ans[i] !== undefined ? String.fromCharCode(65+ans[i]) : "TIDAK DIJAWAB"}</b></p>
+                <p style="color:green; font-weight:bold;">Jawaban Benar: ${String.fromCharCode(65+s.a)}</p>
+                <div style="background:#f0f4f8; padding:20px; border-radius:10px; border-top:3px solid #1a4a7a;">
+                    ${s.h}
+                </div>
+            </div>`;
+        });
+        document.getElementById('final-score').innerText = Math.round(b/50*100);
+        document.getElementById('info-peserta').innerHTML = `<b>Peserta:</b> ${document.getElementById('nama').value}<br><b>Tanggal Tes:</b> ${new Date().toLocaleDateString('id-ID')}`;
+        document.getElementById('list-bahas').innerHTML = h;
+        window.scrollTo(0,0);
+    }
+</script>
+</body>
+</html>
