@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Menu Tes Psikotes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(135deg, #1a4a7a, #2563eb);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    .menu-box {
+        background: #ffffff;
+        width: 100%;
+        max-width: 480px;
+        padding: 40px 35px;
+        border-radius: 20px;
+        box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+        text-align: center;
+    }
+
+    h1 {
+        margin: 0 0 10px;
+        color: #1a4a7a;
+        font-size: 26px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 30px;
+    }
+
+    .menu-btn {
+        display: block;
+        text-decoration: none;
+        margin-bottom: 14px;
+        padding: 16px 20px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        color: white;
+        transition: all 0.25s ease;
+    }
+
+    .menu-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        opacity: 0.95;
+    }
+
+    .disabled {
+        pointer-events: none;
+        opacity: 0.45;
+        filter: grayscale(100%);
+    }
+
+    .huruf { background: #0ea5e9; }
+    .umum { background: #22c55e; }
+    .lanjutan { background: #16a34a; }
+    .verbal { background: #a855f7; }
+    .silogisme { background: #f97316; }
+
+    .expired-box {
+        display: none;
+        margin-top: 25px;
+        padding: 15px;
+        border: 2px dashed #dc2626;
+        border-radius: 12px;
+        color: #dc2626;
+        font-weight: 700;
+        font-size: 14px;
+        background: #fff5f5;
+    }
+
+    .note {
+        margin-top: 30px;
+        font-size: 12px;
+        color: #666;
+        line-height: 1.6;
+    }
+
+    .footer {
+        margin-top: 25px;
+        font-size: 12px;
+        color: #444;
+        line-height: 1.6;
+    }
+
+    .footer b {
+        color: #1a4a7a;
+    }
+</style>
+</head>
+<body>
+
+<div class="menu-box">
+    <h1>📚 Menu Tes Psikotes</h1>
+    <div class="subtitle">Silakan pilih jenis tes yang tersedia</div>
+
+    <a id="btn1" href="hurufhilang_1.HTML" class="menu-btn huruf">
+        🔤 Tes Huruf Hilang
+    </a>
+
+    <a id="btn2" href="Kecerdasan_1.HTML" class="menu-btn umum">
+        🧠 Tes Kecerdasan Umum
+    </a>
+
+    <a id="btn3" href="KECERDASAN_2.HTML" class="menu-btn lanjutan">
+        🧠✨ Tes Kecerdasan Lanjutan
+    </a>
+
+    <a id="btn4" href="KECERDASAN_VERBAL_1.HTML" class="menu-btn verbal">
+        🗣️📘 Tes Kecerdasan Verbal
+    </a>
+
+    <a id="btn5" href="SILOGISME.HTML" class="menu-btn silogisme">
+        🔍📐 Tes Silogisme & Logika
+    </a>
+
+    <div id="expiredBox" class="expired-box">
+        ⛔ AKSES DITUTUP<br>
+        Masa berlaku paket soal ini telah berakhir<br>
+        <b>(Expired: 1 Juli 2026)</b>
+    </div>
+
+    <div class="note">
+        ⚠️ Semua file harus berada dalam folder yang sama dengan <b>menu.html</b><br>
+        🌐 Kompatibel: HP & Laptop | Semua Browser
+    </div>
+
+    <div class="footer">
+        <b>Persona Research & Consulting</b><br>
+        CS: 0877 4251 5786
+    </div>
+</div>
+
+<script>
+    // ===== SISTEM EXPIRED DATE =====
+    const EXPIRED_DATE = new Date("2026-07-01T23:59:59");
+    const now = new Date();
+
+    if (now > EXPIRED_DATE) {
+        document.getElementById("expiredBox").style.display = "block";
+        const buttons = document.querySelectorAll(".menu-btn");
+        buttons.forEach(btn => btn.classList.add("disabled"));
+    }
+</script>
+
+</body>
+</html>
